@@ -53,7 +53,7 @@ public class AllEventHandler {
                     break;
                 }
             }
-            if (index == -1) {
+            if (index != -1) {
                 currencies.remove(index);
                 Launcher.setCurrencies(currencies);
                 Launcher.refreshPane();
@@ -75,7 +75,7 @@ public class AllEventHandler {
                     break;
                 }
             }
-            if (index == -1) {
+            if (index != -1) {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setTitle("Add Watch");
                 dialog.setContentText("Rate: ");
@@ -87,7 +87,7 @@ public class AllEventHandler {
                     currencies.get(index).setWatch(true);
                     currencies.get(index).setWatchRate(rate);
                     Launcher.setCurrencies(currencies);
-                    onRefresh();
+                    Launcher.refreshPane();
                 }
             }
             Launcher.setCurrencies(currencies);
