@@ -47,6 +47,7 @@ public class AllEventHandler {
         try {
             List<Currency> currencies = Launcher.getCurrencies();
             int index = -1;
+
             for (int i = 0 ; i < currencies.size(); i++) {
                 if (currencies.get(i).getShortCode().equals(code)) {
                     index = i;

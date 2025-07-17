@@ -56,7 +56,7 @@ public class Launcher extends Application {
         topPane.refreshPane();
         currencyParentPane.refreshPane(currencies);
         primaryStage.sizeToScene();
-    } // 2.48
+    }
 
     public static List<Currency> getCurrencies() {
         return Launcher.currencies;
@@ -66,3 +66,4 @@ public class Launcher extends Application {
         Launcher.currencies = currencies;
     }
 }
+
