@@ -13,11 +13,13 @@ import javafx.scene.layout.VBox;
 import se233.chapter2.controller.AllEventHandler;
 import se233.chapter2.controller.draw.DrawGraphTask;
 import se233.chapter2.model.Currency;
+import se233.chapter2.model.CurrencyEntity;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.spi.CurrencyNameProvider;
 
 public class CurrencyPane extends BorderPane {
     private Currency currency;
@@ -80,7 +82,8 @@ public class CurrencyPane extends BorderPane {
         exchangeString.setStyle("-fx-font-size: 20");
         watchString.setStyle("-fx-font-size: 14");
         if (this.currency != null) {
-            exchangeString.setText(String.format("%s: %.4f", this.currency.getShortCode(), this.currency.getCurrent().getRate()));
+            String baseCurrency = CurrencyEntity.baseCurrency + " to ";
+            exchangeString.setText(baseCurrency + String.format("%s: %.4f", this.currency.getShortCode(), this.currency.getCurrent().getRate()));
             if (this.currency.getWatch() == true) {
                 watchString.setText(String.format("(Watch @%.4f)", this.currency.getWatchRate()));
             }

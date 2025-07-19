@@ -20,12 +20,11 @@ import java.util.List;
 public class FetchData {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
             "yyyy-MM-dd");
-    public static boolean isValid = true;
 
-    public static List<CurrencyEntity> fetchRange(String symbol, int N) {
+    public static List<CurrencyEntity> fetchRange(String symbol, int N, String baseCode) {
         String dateEnd = LocalDate.now().format(formatter);
         String dateStart = LocalDate.now().minusDays(N).format(formatter);
-        String urlStr = String.format("https://cmu.to/SE233currencyapi?base=THB&symbol=%s&start_date=%s&end_date=%s", symbol, dateStart, dateEnd);
+        String urlStr = String.format("https://cmu.to/SE233currencyapi?base=%s&symbol=%s&start_date=%s&end_date=%s", baseCode, symbol, dateStart, dateEnd);
         List<CurrencyEntity> histList = new ArrayList<>();
         try {
             String retrievedJson = IOUtils.toString(new URL(urlStr), Charset.defaultCharset());
@@ -47,12 +46,10 @@ public class FetchData {
         } catch (IOException e) {
             System.err.println("Encounter an IO Exception.");
         } catch (JSONException e) {
-            isValid = false;
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter a valid currency code");
             alert.showAndWait();
             System.err.println("Encounter a JSON Exception.");
         }
-
         return  histList;
     }
 }
