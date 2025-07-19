@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
-import java.util.spi.CurrencyNameProvider;
 
 public class CurrencyPane extends BorderPane {
     private Currency currency;
@@ -78,17 +77,22 @@ public class CurrencyPane extends BorderPane {
         currencyInfoPane.setPadding(new Insets(5,25,5,25));
         currencyInfoPane.setAlignment(Pos.CENTER);
         Label exchangeString = new Label("");
+        Label conversionLabel = new Label("");
         Label watchString = new Label("");
         exchangeString.setStyle("-fx-font-size: 20");
         watchString.setStyle("-fx-font-size: 14");
         if (this.currency != null) {
-            String baseCurrency = CurrencyEntity.baseCurrency + " to ";
-            exchangeString.setText(baseCurrency + String.format("%s: %.4f", this.currency.getShortCode(), this.currency.getCurrent().getRate()));
+            exchangeString.setText(String.format("%s: %.4f", this.currency.getShortCode(), this.currency.getCurrent().getRate()));
+            if (CurrencyEntity.baseCurrency != null) {
+                conversionLabel.setText("From " + CurrencyEntity.baseCurrency + " to " + this.currency.getShortCode());
+            } else {
+                conversionLabel.setText("From THB to " + this.currency.getShortCode());
+            }
             if (this.currency.getWatch() == true) {
                 watchString.setText(String.format("(Watch @%.4f)", this.currency.getWatchRate()));
             }
         }
-        currencyInfoPane.getChildren().addAll(exchangeString, watchString);
+        currencyInfoPane.getChildren().addAll(exchangeString, conversionLabel, watchString);
         return currencyInfoPane;
     }
 

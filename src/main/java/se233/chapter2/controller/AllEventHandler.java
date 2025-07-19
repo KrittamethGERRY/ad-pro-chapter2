@@ -7,6 +7,7 @@ import se233.chapter2.Launcher;
 import se233.chapter2.model.Currency;
 import se233.chapter2.model.CurrencyEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -15,8 +16,20 @@ public class AllEventHandler {
 
     public static void onSetBaseCurrency(String baseCode) {
         try {
-            CurrencyEntity.setBaseCurrency(baseCode);
-            onRefresh();
+
+            List<Currency> currencies = new ArrayList<>();
+            List<Currency> prevCurrencies = Launcher.getCurrencies();
+            Launcher.setCurrencies(currencies);
+            for (int i = 0; i < prevCurrencies.size(); i++) {
+                CurrencyEntity.setBaseCurrency(baseCode);
+                Currency c = new Currency(prevCurrencies.get(i).getShortCode());
+                List<CurrencyEntity> cList = FetchData.fetchRange(c.getShortCode(), 30, baseCode);
+                c.setHistorical(cList);
+                c.setCurrent(cList.get(cList.size() - 1));
+                currencies.add(c);
+            }
+            Launcher.setCurrencies(currencies);
+            Launcher.refreshPane();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -28,6 +41,10 @@ public class AllEventHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void onAdd(String code) {
+
     }
 
     public static void onAdd() {
