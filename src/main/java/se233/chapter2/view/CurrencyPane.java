@@ -22,14 +22,22 @@ import java.util.concurrent.FutureTask;
 public class CurrencyPane extends BorderPane {
     private Currency currency;
     private Button watch;
+    private Button unwatch;
     private Button delete;
     public CurrencyPane(Currency currency) {
         this.watch = new Button("Watch");
+        this.unwatch = new Button("Unwatch");
         this.delete = new Button("Delete");
         this.watch.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 AllEventHandler.onWatch(currency.getShortCode());
+            }
+        });
+        this.unwatch.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AllEventHandler.onUnwatch(currency.getShortCode());
             }
         });
         this.delete.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,7 +92,7 @@ public class CurrencyPane extends BorderPane {
     private Pane genTopArea() {
         HBox topArea = new HBox(10);
         topArea.setPadding(new Insets(5));
-        topArea.getChildren().addAll(watch, delete);
+        topArea.getChildren().addAll(watch, unwatch, delete);
         ((HBox) topArea).setAlignment(Pos.CENTER);
         return topArea;
     }

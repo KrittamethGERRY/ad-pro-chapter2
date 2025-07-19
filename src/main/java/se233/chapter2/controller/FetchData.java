@@ -1,6 +1,8 @@
 package se233.chapter2.controller;
 
+import javafx.scene.control.Alert;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import se233.chapter2.model.CurrencyEntity;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class FetchData {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
             "yyyy-MM-dd");
+    public static boolean isValid = true;
 
     public static List<CurrencyEntity> fetchRange(String symbol, int N) {
         String dateEnd = LocalDate.now().format(formatter);
@@ -43,6 +46,11 @@ public class FetchData {
             System.err.println("Encounter a Malformed URL Exception.");
         } catch (IOException e) {
             System.err.println("Encounter an IO Exception.");
+        } catch (JSONException e) {
+            isValid = false;
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please enter a valid currency code");
+            alert.showAndWait();
+            System.err.println("Encounter a JSON Exception.");
         }
 
         return  histList;

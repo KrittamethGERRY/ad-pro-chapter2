@@ -1,5 +1,6 @@
 package se233.chapter2.controller;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import se233.chapter2.Launcher;
 import se233.chapter2.model.Currency;
@@ -27,9 +28,10 @@ public class AllEventHandler {
             dialog.setGraphic(null);
             Optional<String> code = dialog.showAndWait();
             if (code.isPresent()) {
+                System.out.println(code.get());
                 List<Currency> currencies = Launcher.getCurrencies();
-                Currency c = new Currency(code.get());
-                List<CurrencyEntity> cList = FetchData.fetchRange(c.getShortCode(), 8);
+                Currency c = new Currency(code.get().toUpperCase());
+                List<CurrencyEntity> cList = FetchData.fetchRange(c.getShortCode(), 30);
                 c.setHistorical(cList);
                 c.setCurrent(cList.get(cList.size() - 1));
                 currencies.add(c);
@@ -90,6 +92,31 @@ public class AllEventHandler {
                     Launcher.setCurrencies(currencies);
                     Launcher.refreshPane();
                 }
+            }
+            Launcher.setCurrencies(currencies);
+            Launcher.refreshPane();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void onUnwatch(String code) {
+        try {
+            List<Currency> currencies = Launcher.getCurrencies();
+            int index = -1;
+            for (int i = 0; i < currencies.size(); i++) {
+                if (currencies.get(i).getShortCode().equals(code)) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1) {
+                currencies.get(index).setWatch(false);
+                currencies.get(index).setWatchRate(null);
+                Launcher.setCurrencies(currencies);
+                Launcher.refreshPane();
             }
             Launcher.setCurrencies(currencies);
             Launcher.refreshPane();
