@@ -11,7 +11,6 @@ import javafx.scene.layout.FlowPane;
 import se233.chapter2.Launcher;
 import se233.chapter2.controller.AllEventHandler;
 import se233.chapter2.model.Currency;
-import se233.chapter2.model.CurrencyEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,30 +19,33 @@ public class TopPane extends FlowPane {
     private Button refresh;
     private Button add;
     private Label update;
-    public static ComboBox<String> currencies;
+    public static ComboBox<String> baseCodeComboBox;
     public TopPane() {
         this.setPadding(new Insets(10));
         this.setHgap(10);
         this.setPrefSize(640,20);
         add = new Button("Add");
         refresh = new Button("Refresh");
-        currencies = new ComboBox<>();
-        currencies.setPromptText("Base currency");
-        currencies.getItems().addAll("THB", "USD", "JPY", "AUD", "CAD", "EUR");
-        currencies.getSelectionModel().selectFirst();
-        currencies.setOnAction(new EventHandler<ActionEvent>() {
+        baseCodeComboBox = new ComboBox<>();
+        baseCodeComboBox.setPromptText("Base currency");
+        baseCodeComboBox.getItems().addAll("THB", "USD", "JPY", "AUD", "CAD", "EUR");
+        baseCodeComboBox.getSelectionModel().selectFirst();
+        baseCodeComboBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 List<Currency> list = Launcher.getCurrencies();
                 for (int i = 0; i < list.size(); i++) {
-                    if (currencies.getSelectionModel().getSelectedItem().equals(Launcher.getCurrencies().get(i).getShortCode())) {
-                        currencies.getSelectionModel().selectPrevious();
+                    if (baseCodeComboBox.getSelectionModel().getSelectedItem().equals(Launcher.getCurrencies().get(i).getShortCode())) {
+                        baseCodeComboBox.getSelectionModel().selectPrevious();
+                        if (baseCodeComboBox.getSelectionModel().getSelectedItem().equals(Launcher.getCurrencies().get(i).getShortCode())) {
+                            baseCodeComboBox.getSelectionModel().selectLast();
+                        }
                         Alert alert = new Alert(Alert.AlertType.ERROR, "The base currency and target currency cannot be the same.");
                         alert.showAndWait();
                         throw new IllegalArgumentException("The base currency and target currency cannot be the same.");
                     }
                 }
-                AllEventHandler.onSetBaseCurrency(currencies.getSelectionModel().getSelectedItem().toUpperCase());
+                AllEventHandler.onSetBaseCurrency(baseCodeComboBox.getSelectionModel().getSelectedItem().toUpperCase());
             }
         });
         refresh.setOnAction(new EventHandler<ActionEvent>() {
@@ -61,7 +63,7 @@ public class TopPane extends FlowPane {
         });
         update = new Label();
         refreshPane();
-        this.getChildren().addAll(refresh, add, update, currencies);
+        this.getChildren().addAll(refresh, add, update, baseCodeComboBox);
     }
 
     public void refreshPane() {

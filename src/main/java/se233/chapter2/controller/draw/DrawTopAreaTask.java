@@ -44,7 +44,7 @@ public class DrawTopAreaTask implements Callable<Pane> {
     }
 
     @Override
-    public Pane call() throws Exception {
+    public HBox call() throws Exception {
         HBox topArea = new HBox(10);
         topArea.setPadding(new Insets(5));
         topArea.getChildren().addAll(watch, unwatch, delete);
