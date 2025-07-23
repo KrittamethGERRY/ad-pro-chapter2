@@ -42,7 +42,7 @@ public class CurrencyPane extends BorderPane {
 
     private Pane genInfoPane() throws ExecutionException, InterruptedException {
         FutureTask futureTask = new FutureTask<Pane>(new DrawCurrencyInfoTask(currency));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(4);
         executor.execute(futureTask);
         Pane currencyInfoPane = (Pane) futureTask.get();
         return currencyInfoPane;
@@ -50,7 +50,7 @@ public class CurrencyPane extends BorderPane {
 
     private Pane genTopArea() throws ExecutionException, InterruptedException {
         FutureTask futureTask = new FutureTask<Pane>(new DrawTopAreaTask(currency));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(4);
         executor.execute(futureTask);
         Pane topArea = (Pane) futureTask.get();
         return topArea;

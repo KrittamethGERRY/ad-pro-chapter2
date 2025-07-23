@@ -1,22 +1,24 @@
 package se233.chapter2.controller;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;
 import org.json.JSONException;
 import se233.chapter2.Launcher;
 import se233.chapter2.model.Currency;
 import se233.chapter2.model.CurrencyEntity;
+import se233.chapter2.view.TopPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class AllEventHandler {
 
-    public static void onSetBaseCurrency(String baseCode) {
-        try {
-
+    public static void onSetBaseCurrency(String baseCode) throws ExecutionException, InterruptedException {
             List<Currency> currencies = new ArrayList<>();
             List<Currency> prevCurrencies = Launcher.getCurrencies();
             Launcher.setCurrencies(currencies);
@@ -30,8 +32,38 @@ public class AllEventHandler {
             }
             Launcher.setCurrencies(currencies);
             Launcher.refreshPane();
-        } catch (Exception e) {
-            e.printStackTrace();
+    }
+
+    public static void onAddBaseCurrency(ComboBox<String> comboBox) throws ExecutionException, InterruptedException {
+        ComboBox<String> dropdownMenu = comboBox;
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Add Base Currency");
+        dialog.setContentText("Base currency code: ");
+        dialog.setHeaderText(null);
+        dialog.setGraphic(null);
+        Optional<String> code = dialog.showAndWait();
+        if (code.isPresent() && code.get().length() == 3) {
+            List<Currency> currencies = new ArrayList<>();
+            List<Currency> prevCurrencies = Launcher.getCurrencies();
+            Launcher.setCurrencies(currencies);
+            for (int i = 0; i < prevCurrencies.size(); i++) {
+                CurrencyEntity.setBaseCurrency(code.get());
+                Currency c = new Currency(prevCurrencies.get(i).getShortCode());
+                List<CurrencyEntity> cList = FetchData.fetchRange(c.getShortCode(), 30, code.get());
+                if (!cList.isEmpty()) {
+                    c.setHistorical(cList);
+                    c.setCurrent(cList.get(cList.size() - 1));
+                    currencies.add(c);
+                    dropdownMenu.getItems().addFirst((String) code.get());
+                    dropdownMenu.getSelectionModel().selectFirst();
+                    TopPane.baseCodeComboBox = dropdownMenu;
+                }
+            }
+
+            Launcher.setCurrencies(currencies);
+            Launcher.refreshPane();
+        } else {
+            dropdownMenu.getSelectionModel().selectFirst();
         }
     }
 
@@ -41,10 +73,6 @@ public class AllEventHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void onAdd(String code) {
-
     }
 
     public static void onAdd() {
