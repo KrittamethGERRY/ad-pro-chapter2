@@ -21,7 +21,7 @@ public class WatchTask implements Callable<Void> {
                 }
             }
         }
-        if (found.equals("")) {
+        if (found.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle(null);
             alert.setHeaderText(null);

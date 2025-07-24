@@ -142,7 +142,7 @@ public class AllEventHandler {
                 dialog.setHeaderText(null);
                 dialog.setGraphic(null);
                 Optional<String> retrievedRate = dialog.showAndWait();
-                if (retrievedRate.isPresent() && retrievedRate.get().length() == 3) {
+                if (retrievedRate.isPresent() && retrievedRate.get().length() <= 3) {
                     double rate = Double.parseDouble(retrievedRate.get());
                     currencies.get(index).setWatch(true);
                     currencies.get(index).setWatchRate(rate);
